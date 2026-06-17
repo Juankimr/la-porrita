@@ -101,19 +101,6 @@ CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = False
 CSRF_USE_SESSIONS = False
 
-# Auto-detect trusted origins from request host
-if DEBUG:
-    CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
-else:
-    trusted = os.getenv("CSRF_TRUSTED_ORIGINS", "")
-    if trusted:
-        CSRF_TRUSTED_ORIGINS = [h.strip() for h in trusted.split(",") if h.strip()]
-    else:
-        # Auto-detect from container hostname or default
-        import socket
-        hostname = socket.gethostname()
-        CSRF_TRUSTED_ORIGINS = [f"https://{hostname}"]
-
 # Football Data API
 FOOTBALL_DATA_TOKEN = os.getenv("FOOTBALL_DATA_TOKEN", "")
 FOOTBALL_DATA_BASE_URL = os.getenv(

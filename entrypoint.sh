@@ -30,7 +30,8 @@ if [ -n "$FOOTBALL_DATA_TOKEN" ]; then
   echo "Syncing football data..."
   .venv/bin/python manage.py sync_football_data
 else
-  echo "FOOTBALL_DATA_TOKEN not set, skipping sync"
+  echo "FOOTBALL_DATA_TOKEN not set, seeding demo data..."
+  .venv/bin/python manage.py seed_demo_data
 fi
 
 echo "Starting server..."
