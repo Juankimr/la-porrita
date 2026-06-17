@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}La Porrita - World Cup 2026{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,9 +67,7 @@
         <nav class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="flex items-center justify-between h-16">
                 <a href="{% url 'pool:dashboard' %}" class="flex items-center gap-2.5 group">
-                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-600 text-white shadow-lg shadow-brand-900/40 group-hover:scale-105 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                    </span>
+                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-600 text-white shadow-lg shadow-brand-900/40 group-hover:scale-105 transition-transform text-xl leading-none">⚽</span>
                     <span class="flex flex-col leading-none">
                         <span class="font-heading font-extrabold text-white text-lg tracking-tight">La Porrita</span>
                         <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-400">World Cup 2026</span>
