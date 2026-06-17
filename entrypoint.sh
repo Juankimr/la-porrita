@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-# Ensure persistent data directory exists
-mkdir -p /data
-export DATABASE_PATH="/data/db.sqlite3"
+# Use persistent DB in /data only when running in Docker (mounted volume)
+if [ -d /data ]; then
+  export DATABASE_PATH="/data/db.sqlite3"
+fi
 
 echo "Running migrations..."
 .venv/bin/python manage.py migrate --noinput
