@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Ensure persistent data directory exists
+mkdir -p /data
+export DATABASE_PATH="/data/db.sqlite3"
+
 echo "Running migrations..."
 .venv/bin/python manage.py migrate --noinput
 
