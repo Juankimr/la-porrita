@@ -44,4 +44,4 @@ EXPOSE 8000
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Start cron in background and run gunicorn
-CMD ["sh", "-c", "cron && .venv/bin/gunicorn porrita.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "cron && .venv/bin/gunicorn porrita.wsgi:application --bind 0.0.0.0:8000 --access-logfile - --error-logfile -"]
