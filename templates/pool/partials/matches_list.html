@@ -1,0 +1,37 @@
+{% for match in matches %}
+<div class="px-4 sm:px-6 py-4 hover:bg-ink-50/70 transition-colors cursor-pointer"
+     hx-get="{% url 'pool:htmx_match_predictions' match.pk %}"
+     hx-target="#predictions-container"
+     hx-indicator="#loading-indicator">
+    <div class="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 sm:gap-x-6">
+        <div class="flex flex-col items-center justify-center w-12 sm:w-14 py-1.5 rounded-lg bg-ink-100 text-ink-700">
+            <span class="font-heading font-bold text-sm leading-none tabular">{{ match.match_date|date:"d" }}</span>
+            <span class="text-[10px] font-semibold uppercase text-ink-400 mt-0.5">{{ match.match_date|date:"M" }}</span>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 sm:gap-3 min-w-0">
+            <span class="flex-1 text-right truncate font-semibold text-ink-900 text-sm sm:text-base">{{ match.home_team.name }}</span>
+            <span class="shrink-0 px-2 py-0.5 rounded-md bg-ink-900 text-white font-heading font-bold text-xs sm:text-sm tabular">
+                {% if match.home_goals is not None %}{{ match.home_goals }} - {{ match.away_goals }}{% else %}vs{% endif %}
+            </span>
+            <span class="flex-1 text-left truncate font-semibold text-ink-900 text-sm sm:text-base">{{ match.away_team.name }}</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1
+                {% if match.status == 'FINISHED' %}bg-emerald-100 text-emerald-800 ring-emerald-600/20
+                {% elif match.status == 'IN_PLAY' %}bg-amber-100 text-amber-800 ring-amber-600/20
+                {% else %}bg-ink-100 text-ink-600 ring-ink-500/20{% endif %}">
+                <span class="w-1.5 h-1.5 rounded-full
+                    {% if match.status == 'FINISHED' %}bg-emerald-500
+                    {% elif match.status == 'IN_PLAY' %}bg-amber-500
+                    {% else %}bg-ink-400{% endif %}"></span>
+                {{ match.get_status_display }}
+            </span>
+            <span class="text-xs text-ink-400 hidden sm:inline">{{ match.get_stage_display }}{% if match.group_name %} · {{ match.group_name }}{% endif %}</span>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="px-6 py-16 text-center text-ink-400 text-sm">No hay partidos disponibles</div>
+{% endfor %}

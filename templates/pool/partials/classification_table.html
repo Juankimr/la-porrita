@@ -1,0 +1,20 @@
+{% for standing in standings %}
+<div class="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 px-4 sm:px-6 py-4 hover:bg-ink-50/70 transition-colors">
+    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-sm font-bold
+        {% if forloop.counter == 1 %}bg-amber-100 text-amber-700
+        {% elif forloop.counter == 2 %}bg-ink-200 text-ink-600
+        {% elif forloop.counter == 3 %}bg-orange-100 text-orange-700
+        {% else %}bg-ink-100 text-ink-500{% endif %}">
+        {{ forloop.counter }}
+    </span>
+    <a href="{% url 'pool:player_detail' standing.participant.pk %}" class="font-heading font-bold text-ink-900 hover:text-brand-600 transition-colors">{{ standing.participant.name }}</a>
+    <div class="flex items-center gap-4 text-sm">
+        <span class="text-ink-500 hidden sm:inline tabular">{{ standing.group_stage_points|floatformat:"0" }} <span class="text-xs">grp</span></span>
+        <span class="text-ink-500 hidden sm:inline tabular">{{ standing.knockout_points|floatformat:"0" }} <span class="text-xs">ko</span></span>
+        <span class="text-ink-400 hidden md:inline tabular">{{ standing.exact_predictions }} exact</span>
+        <span class="font-heading font-extrabold text-xl text-emerald-600 min-w-[60px] text-right tabular">{{ standing.total_points|floatformat:"0" }}</span>
+    </div>
+</div>
+{% empty %}
+<div class="px-6 py-16 text-center text-ink-400 text-sm">No hay datos de clasificación</div>
+{% endfor %}

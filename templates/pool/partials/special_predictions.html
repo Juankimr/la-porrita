@@ -1,0 +1,88 @@
+{% if special_predictions %}
+    <!-- Posiciones -->
+    <div class="px-5 py-3 bg-ink-50/50">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-ink-400">Posiciones</p>
+    </div>
+    {% for pred in special_predictions %}
+        {% if pred.prediction_type == 'CHAMPION' or pred.prediction_type == 'RUNNER_UP' or pred.prediction_type == 'THIRD_PLACE' %}
+        <div class="flex items-center justify-between px-5 py-3 hover:bg-ink-50/70 transition-colors">
+            <div class="flex items-center gap-3">
+                <span class="text-lg">
+                    {% if pred.prediction_type == 'CHAMPION' %}🥇
+                    {% elif pred.prediction_type == 'RUNNER_UP' %}🥈
+                    {% else %}🥉{% endif %}
+                </span>
+                <span class="font-semibold text-ink-900 text-sm">{{ pred.get_prediction_type_display }}</span>
+            </div>
+            <div class="text-right">
+                {% if pred.team %}
+                    <span class="font-heading font-bold text-ink-900">{{ pred.team.name }}</span>
+                    <span class="text-xs text-ink-400 ml-1">{{ pred.team.flag_emoji }}</span>
+                {% else %}
+                    <span class="text-ink-400">-</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Bota de Oro -->
+    <div class="px-5 py-3 bg-ink-50/50 border-t border-ink-100">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-ink-400">Bota de Oro</p>
+    </div>
+    {% for pred in special_predictions %}
+        {% if pred.prediction_type == 'GOLDEN_BOOT' or pred.prediction_type == 'GOLDEN_BOOT_2' or pred.prediction_type == 'GOLDEN_BOOT_3' %}
+        <div class="flex items-center justify-between px-5 py-3 hover:bg-ink-50/70 transition-colors">
+            <div class="flex items-center gap-3">
+                <span class="text-lg">
+                    {% if pred.prediction_type == 'GOLDEN_BOOT' %}🥇
+                    {% elif pred.prediction_type == 'GOLDEN_BOOT_2' %}🥈
+                    {% else %}🥉{% endif %}
+                </span>
+                <span class="font-semibold text-ink-900 text-sm">{{ pred.get_prediction_type_display }}</span>
+            </div>
+            <div class="text-right">
+                {% if pred.player_name %}
+                    <span class="font-heading font-bold text-ink-900">{{ pred.player_name }}</span>
+                {% else %}
+                    <span class="text-ink-400">-</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Balón de Oro -->
+    <div class="px-5 py-3 bg-ink-50/50 border-t border-ink-100">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-ink-400">Balón de Oro</p>
+    </div>
+    {% for pred in special_predictions %}
+        {% if pred.prediction_type == 'GOLDEN_BALL' or pred.prediction_type == 'GOLDEN_BALL_2' or pred.prediction_type == 'GOLDEN_BALL_3' %}
+        <div class="flex items-center justify-between px-5 py-3 hover:bg-ink-50/70 transition-colors">
+            <div class="flex items-center gap-3">
+                <span class="text-lg">
+                    {% if pred.prediction_type == 'GOLDEN_BALL' %}🏆
+                    {% elif pred.prediction_type == 'GOLDEN_BALL_2' %}🥈
+                    {% else %}🥉{% endif %}
+                </span>
+                <span class="font-semibold text-ink-900 text-sm">{{ pred.get_prediction_type_display }}</span>
+            </div>
+            <div class="text-right">
+                {% if pred.player_name %}
+                    <span class="font-heading font-bold text-ink-900">{{ pred.player_name }}</span>
+                {% else %}
+                    <span class="text-ink-400">-</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="px-6 py-12 text-center text-ink-400 text-sm">
+        {% if selected_participant_id %}
+            Este jugador no tiene predicciones especiales
+        {% else %}
+            Selecciona un jugador para ver sus predicciones especiales
+        {% endif %}
+    </div>
+{% endif %}

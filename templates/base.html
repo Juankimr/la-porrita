@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}La Porrita - World Cup 2026{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        heading: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fef2f2', 100: '#fee2e2', 200: '#fecaca',
+                            500: '#ef4444', 600: '#dc2626', 700: '#b91c1c',
+                            800: '#991b1b', 900: '#7f1d1d', 950: '#450a0a',
+                        },
+                        ink: {
+                            50: '#f6f7f9', 100: '#eceef2', 200: '#d5dae3',
+                            400: '#94a3b8', 500: '#64748b', 600: '#475569',
+                            700: '#334155', 800: '#1e293b', 900: '#0f172a', 950: '#080d18',
+                        },
+                    },
+                },
+            },
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            htmx.config.withCredentials = true;
+        });
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        document.body && document.body.addEventListener('htmx:configRequest', function (evt) {
+            if (evt.detail.verb === 'post' || evt.detail.verb === 'put' || evt.detail.verb === 'delete') {
+                const csrfToken = getCookie('csrftoken');
+                if (csrfToken) evt.detail.headers['X-CSRFToken'] = csrfToken;
+            }
+        });
+    </script>
+    <style>
+        [hx-loading] { opacity: 0.5; }
+        html { scroll-behavior: smooth; }
+        body { font-feature-settings: "cv11", "ss01"; }
+        .tabular { font-variant-numeric: tabular-nums; }
+        [data-filter="completed"] .match-row[data-state="pending"] { display: none; }
+        [data-filter="pending"]   .match-row:not([data-state="pending"]) { display: none; }
+        [data-filter="hits"]      .match-row:not([data-hit="1"]) { display: none; }
+    </style>
+</head>
+<body class="bg-ink-50 text-ink-900 font-sans min-h-screen flex flex-col antialiased">
+    <form style="display:none;">{% csrf_token %}</form>
+
+    <header class="sticky top-0 z-40 bg-ink-950/95 backdrop-blur supports-[backdrop-filter]:bg-ink-950/80 border-b border-white/10">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <a href="{% url 'pool:dashboard' %}" class="flex items-center gap-2.5 group">
+                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-600 text-white shadow-lg shadow-brand-900/40 group-hover:scale-105 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    </span>
+                    <span class="flex flex-col leading-none">
+                        <span class="font-heading font-extrabold text-white text-lg tracking-tight">La Porrita</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-400">World Cup 2026</span>
+                    </span>
+                </a>
+
+                <button id="menuBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink-100 hover:bg-white/10" aria-label="Menu" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
+
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="{% url 'pool:dashboard' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10 transition-colors">Dashboard</a>
+                    <a href="{% url 'pool:classification' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10 transition-colors">Clasificación</a>
+                    <a href="{% url 'pool:matches' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10 transition-colors">Partidos</a>
+                    <a href="{% url 'pool:stats' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10 transition-colors">Estadísticas</a>
+                </div>
+            </div>
+            <div id="mobileMenu" class="md:hidden hidden pb-3">
+                <div class="flex flex-col gap-1">
+                    <a href="{% url 'pool:dashboard' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10">Dashboard</a>
+                    <a href="{% url 'pool:classification' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10">Clasificación</a>
+                    <a href="{% url 'pool:matches' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10">Partidos</a>
+                    <a href="{% url 'pool:stats' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-200 hover:text-white hover:bg-white/10">Estadísticas</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-ink-950 text-ink-400 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p class="font-heading font-bold text-white">La Porrita <span class="text-brand-500">·</span> World Cup 2026</p>
+            <p class="text-sm">Hecho por Juan Carlos Muñoz para Neurored</p>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuBtn && menuBtn.addEventListener('click', () => {
+            const open = mobileMenu.classList.toggle('hidden') === false;
+            menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    </script>
+</body>
+</html>

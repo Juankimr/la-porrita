@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Import Excel - La Porrita{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Import Pool Excel</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form id="import-form" enctype="multipart/form-data"
+              hx-post="{% url 'pool:import_excel' %}"
+              hx-target="#import-result"
+              hx-indicator="#import-loading">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Select Excel file
+                    </label>
+                    <input type="file" name="excel_file" accept=".xlsx"
+                           class="mt-1 block w-full rounded border-gray-300">
+                </div>
+                <button type="submit"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    Import
+                </button>
+            </div>
+        </form>
+
+        <div id="import-loading" class="htmx-indicator mt-4">
+            <p class="text-blue-600">Importing...</p>
+        </div>
+
+        <div id="import-result" class="mt-4"></div>
+    </div>
+</div>
+{% endblock %}

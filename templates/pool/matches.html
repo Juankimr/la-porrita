@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Partidos — La Porrita{% endblock %}
+
+{% block content %}
+<section class="bg-ink-950 text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-20">
+        <p class="text-brand-400 font-semibold text-sm uppercase tracking-wider mb-1">Fixtures</p>
+        <h1 class="font-heading font-extrabold text-4xl sm:text-5xl tracking-tight">Partidos</h1>
+        <p class="mt-3 text-ink-400 max-w-2xl">Todos los partidos del Mundial 2026.</p>
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 pb-8">
+    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-5 sm:px-6 py-5 border-b border-ink-100">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">Fixtures</p>
+                <h2 class="mt-0.5 font-heading font-bold text-xl text-ink-900">Todos los Partidos</h2>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <select id="stage-filter" class="rounded-xl border-ink-200 bg-white text-sm font-semibold text-ink-700 focus:ring-brand-500 focus:border-brand-500"
+                        hx-get="{% url 'pool:htmx_matches' %}"
+                        hx-target="#matches-list"
+                        hx-trigger="change"
+                        hx-include="[name='stage'],[name='search']"
+                        name="stage">
+                    <option value="all">Todas las fases</option>
+                    <option value="GROUP_STAGE">Fase de grupos</option>
+                    <option value="ROUND_OF_16">Dieciseisavos</option>
+                    <option value="QUARTER_FINALS">Cuartos</option>
+                    <option value="SEMI_FINALS">Semifinales</option>
+                    <option value="FINAL">Final</option>
+                </select>
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="search-match" placeholder="Buscar..."
+                           class="w-full rounded-xl border-ink-200 bg-white pl-10 pr-4 py-2 text-sm font-semibold text-ink-700 focus:ring-brand-500 focus:border-brand-500"
+                           hx-get="{% url 'pool:htmx_matches' %}"
+                           hx-target="#matches-list"
+                           hx-trigger="keyup changed delay:300ms"
+                           hx-include="[name='stage'],[name='search']"
+                           name="search">
+                </div>
+            </div>
+        </div>
+
+        <div id="matches-list" class="divide-y divide-ink-100">
+            {% for match in matches %}
+            <div class="px-4 sm:px-6 py-4 hover:bg-ink-50/70 transition-colors cursor-pointer"
+                 hx-get="{% url 'pool:htmx_match_predictions' match.pk %}"
+                 hx-target="#predictions-container"
+                 hx-indicator="#loading-indicator">
+                <div class="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 sm:gap-x-6">
+                    <div class="flex flex-col items-center justify-center w-12 sm:w-14 py-1.5 rounded-lg bg-ink-100 text-ink-700">
+                        <span class="font-heading font-bold text-sm leading-none tabular">{{ match.match_date|date:"d" }}</span>
+                        <span class="text-[10px] font-semibold uppercase text-ink-400 mt-0.5">{{ match.match_date|date:"M" }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 sm:gap-3 min-w-0">
+                        <span class="flex-1 text-right truncate font-semibold text-ink-900 text-sm sm:text-base">{{ match.home_team.name }}</span>
+                        <span class="shrink-0 px-2 py-0.5 rounded-md bg-ink-900 text-white font-heading font-bold text-xs sm:text-sm tabular">
+                            {% if match.home_goals is not None %}{{ match.home_goals }} - {{ match.away_goals }}{% else %}vs{% endif %}
+                        </span>
+                        <span class="flex-1 text-left truncate font-semibold text-ink-900 text-sm sm:text-base">{{ match.away_team.name }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1
+                            {% if match.status == 'FINISHED' %}bg-emerald-100 text-emerald-800 ring-emerald-600/20
+                            {% elif match.status == 'IN_PLAY' %}bg-amber-100 text-amber-800 ring-amber-600/20
+                            {% else %}bg-ink-100 text-ink-600 ring-ink-500/20{% endif %}">
+                            <span class="w-1.5 h-1.5 rounded-full
+                                {% if match.status == 'FINISHED' %}bg-emerald-500
+                                {% elif match.status == 'IN_PLAY' %}bg-amber-500
+                                {% else %}bg-ink-400{% endif %}"></span>
+                            {{ match.get_status_display }}
+                        </span>
+                        <span class="text-xs text-ink-400 hidden sm:inline">{{ match.get_stage_display }}{% if match.group_name %} · {{ match.group_name }}{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="px-6 py-16 text-center text-ink-400 text-sm">No hay partidos disponibles</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="predictions-container" class="mt-6 bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden hidden">
+        <div class="px-5 sm:px-6 py-4 border-b border-ink-100">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">Predictions</p>
+            <h2 class="mt-0.5 font-heading font-bold text-xl text-ink-900">Predicciones del Partido</h2>
+        </div>
+        <div id="predictions-list" class="divide-y divide-ink-100">
+            <div class="px-6 py-12 text-center text-ink-400 text-sm">Selecciona un partido para ver predicciones</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

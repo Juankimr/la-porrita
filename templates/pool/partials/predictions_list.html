@@ -1,0 +1,47 @@
+{% for prediction in predictions %}
+<div class="px-4 sm:px-6 py-4 hover:bg-ink-50/70 transition-colors">
+    <div class="grid grid-cols-[auto_1fr_auto] items-center gap-x-4">
+        <a href="{% url 'pool:player_detail' prediction.participant.pk %}" class="font-heading font-bold text-ink-900 hover:text-brand-600 transition-colors">{{ prediction.participant.name }}</a>
+
+        <div class="grid grid-cols-4 gap-2 rounded-xl border border-ink-200 bg-ink-50 p-2 text-center">
+            <div class="rounded-lg bg-white px-3 py-2 shadow-sm">
+                <span class="block text-[10px] font-bold uppercase tracking-wide text-ink-400">Pred</span>
+                <span class="mt-1 block text-sm font-heading font-bold text-ink-900 tabular">{{ prediction.pred_home_goals }} - {{ prediction.pred_away_goals }}</span>
+            </div>
+            <div class="rounded-lg bg-white px-3 py-2 shadow-sm">
+                <span class="block text-[10px] font-bold uppercase tracking-wide text-ink-400">Real</span>
+                {% if match.status == 'FINISHED' %}
+                <span class="mt-1 block text-sm font-heading font-bold text-ink-900 tabular">{{ match.home_goals }} - {{ match.away_goals }}</span>
+                {% else %}
+                <span class="mt-1 block text-sm font-heading font-bold text-ink-400 tabular">—</span>
+                {% endif %}
+            </div>
+            <div class="rounded-lg bg-white px-3 py-2 shadow-sm">
+                <span class="block text-[10px] font-bold uppercase tracking-wide text-ink-400">Pts</span>
+                <span class="mt-1 block text-sm font-heading font-extrabold {% if prediction.score > 0 %}text-emerald-600{% else %}text-ink-400{% endif %} tabular">{{ prediction.score|floatformat:"0" }}</span>
+            </div>
+            <div class="grid place-items-center">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold ring-1
+                    {% if prediction.status_badge == 'exact' %}bg-emerald-100 text-emerald-800 ring-emerald-600/20
+                    {% elif prediction.status_badge == 'partial' %}bg-amber-100 text-amber-800 ring-amber-600/20
+                    {% elif prediction.status_badge == 'missed' %}bg-brand-100 text-brand-800 ring-brand-600/20
+                    {% else %}bg-ink-100 text-ink-600 ring-ink-500/20{% endif %}">
+                    <span class="w-1.5 h-1.5 rounded-full
+                        {% if prediction.status_badge == 'exact' %}bg-emerald-500
+                        {% elif prediction.status_badge == 'partial' %}bg-amber-500
+                        {% elif prediction.status_badge == 'missed' %}bg-brand-500
+                        {% else %}bg-ink-400{% endif %}"></span>
+                    {% if prediction.status_badge == 'exact' %}Exacto
+                    {% elif prediction.status_badge == 'partial' %}Parcial
+                    {% elif prediction.status_badge == 'missed' %}Fallado
+                    {% else %}Pendiente{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <span class="font-heading font-extrabold text-ink-400 tabular">{{ prediction.score|floatformat:"0" }} pts</span>
+    </div>
+</div>
+{% empty %}
+<div class="px-6 py-16 text-center text-ink-400 text-sm">No hay predicciones para este partido</div>
+{% endfor %}

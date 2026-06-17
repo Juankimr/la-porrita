@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Sync API - La Porrita{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Sync with football-data.org</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <p class="text-gray-600 mb-4">
+            Click the button below to sync match results from the football-data.org API.
+        </p>
+        <button hx-post="{% url 'pool:sync_api' %}"
+                hx-target="#sync-result"
+                hx-indicator="#sync-loading"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Sync Results
+        </button>
+        <span id="sync-loading" class="htmx-indicator ml-4 text-blue-600">Syncing...</span>
+        <div id="sync-result" class="mt-4"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+# Cron job for La Porrita
+# Runs every hour to sync football data and recalculate scores
+# Format: minute hour day month weekday command
+
+# Run auto_sync every hour
+0 * * * * cd /app && .venv/bin/python manage.py auto_sync >> /var/log/cron/pool-sync.log 2>&1
+
+# An empty line is required at the end of the file for cron to work properly

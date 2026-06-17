@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — La Porrita{% endblock %}
+
+{% block content %}
+<section class="bg-ink-950 text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-20">
+        <p class="text-brand-400 font-semibold text-sm uppercase tracking-wider mb-1">Overview</p>
+        <h1 class="font-heading font-extrabold text-4xl sm:text-5xl tracking-tight">Dashboard</h1>
+        <p class="mt-3 text-ink-400 max-w-2xl">World Cup 2026 pool overview and quick actions.</p>
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 relative z-10">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 flex flex-col">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wide text-ink-500">Partidos jugados</span>
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 text-brand-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </span>
+            </div>
+            <p class="mt-3 font-heading font-extrabold text-3xl sm:text-4xl text-ink-900 tabular">{{ matches_played }}</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 flex flex-col">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wide text-ink-500">Participantes</span>
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ink-100 text-ink-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+            </div>
+            <p class="mt-3 font-heading font-extrabold text-3xl sm:text-4xl text-ink-900 tabular">{{ participants_count }}</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 flex flex-col">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wide text-ink-500">Líder actual</span>
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                </span>
+            </div>
+            {% if leader %}
+            <p class="mt-3 font-heading font-extrabold text-2xl text-ink-900">{{ leader.participant.name }}</p>
+            <p class="text-sm font-semibold text-emerald-600">{{ leader.total_points|floatformat:"0" }} pts</p>
+            {% else %}
+            <p class="mt-3 font-heading font-extrabold text-3xl text-ink-300 tabular">—</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+            <div class="px-5 sm:px-6 py-4 border-b border-ink-100">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">Recientes</p>
+                <h2 class="mt-0.5 font-heading font-bold text-lg text-ink-900">Últimos partidos</h2>
+            </div>
+            <div class="divide-y divide-ink-100">
+                {% for match in recent_matches %}
+                <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-5 py-3 hover:bg-ink-50/70 transition-colors">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="inline-flex items-center justify-center w-12 py-1 rounded-lg bg-ink-100 text-ink-700 shrink-0">
+                            <span class="font-heading font-bold text-sm tabular">{{ match.match_date|date:"d" }}</span>
+                        </span>
+                        <span class="font-semibold text-ink-900 text-sm truncate">{{ match.home_team.name }}</span>
+                    </div>
+                    <span class="font-heading font-bold text-ink-900 tabular shrink-0">{{ match.home_goals }} - {{ match.away_goals }}</span>
+                    <span class="font-semibold text-ink-900 text-sm truncate text-right">{{ match.away_team.name }}</span>
+                </div>
+                {% empty %}
+                <div class="px-5 py-8 text-center text-ink-400 text-sm">No hay partidos recientes</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+            <div class="px-5 sm:px-6 py-4 border-b border-ink-100">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">Rankings</p>
+                <h2 class="mt-0.5 font-heading font-bold text-lg text-ink-900">Top 5 Clasificación</h2>
+            </div>
+            <div class="divide-y divide-ink-100">
+                {% for standing in top_classified %}
+                <div class="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-3 hover:bg-ink-50/70 transition-colors">
+                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-ink-100 text-xs font-bold text-ink-600 shrink-0">{{ forloop.counter }}</span>
+                    <a href="{% url 'pool:player_detail' standing.participant.pk %}" class="font-semibold text-ink-900 text-sm hover:text-brand-600 transition-colors truncate">{{ standing.participant.name }}</a>
+                    <span class="font-heading font-extrabold text-emerald-600 tabular shrink-0">{{ standing.total_points|floatformat:"0" }} <span class="text-xs text-ink-400 font-medium">pts</span></span>
+                </div>
+                {% empty %}
+                <div class="px-5 py-8 text-center text-ink-400 text-sm">No hay datos de clasificación</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if user.is_authenticated %}
+<section class="max-w-6xl mx-auto px-4 sm:px-6 pb-8">
+    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+        <div class="px-5 sm:px-6 py-4 border-b border-ink-100">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">Admin</p>
+            <h2 class="mt-0.5 font-heading font-bold text-lg text-ink-900">Acciones rápidas</h2>
+        </div>
+        <div class="p-5">
+            <div class="flex flex-wrap gap-3">
+                <a href="{% url 'pool:import_excel' %}" class="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-ink-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    Importar Excel
+                </a>
+                <button hx-post="{% url 'pool:sync_api' %}" hx-target="#action-result" hx-indicator="#sync-loading"
+                        class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                    Sincronizar API
+                </button>
+                <button hx-post="{% url 'pool:recalculate' %}" hx-target="#action-result" hx-indicator="#recalc-loading"
+                        class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>
+                    Recalcular
+                </button>
+            </div>
+            <div id="sync-loading" class="htmx-indicator mt-3 text-sm text-brand-600 font-medium">Sincronizando...</div>
+            <div id="recalc-loading" class="htmx-indicator mt-3 text-sm text-emerald-600 font-medium">Recalculando...</div>
+            <div id="action-result" class="mt-4"></div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

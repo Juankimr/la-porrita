@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Recalculate - La Porrita{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Recalculate Scores</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <p class="text-gray-600 mb-4">
+            Click the button below to recalculate all participant scores based on current match results.
+        </p>
+        <button hx-post="{% url 'pool:recalculate' %}"
+                hx-target="#recalculate-result"
+                hx-indicator="#recalc-loading"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            Recalculate
+        </button>
+        <span id="recalc-loading" class="htmx-indicator ml-4 text-green-600">Recalculating...</span>
+        <div id="recalculate-result" class="mt-4"></div>
+    </div>
+</div>
+{% endblock %}
