@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}La Porrita - World Cup 2026{% endblock %}</title>
@@ -63,15 +64,17 @@
 <body class="bg-ink-50 text-ink-900 font-sans min-h-screen flex flex-col antialiased">
     <form style="display:none;">{% csrf_token %}</form>
 
-    <header class="sticky top-0 z-40 bg-ink-950/95 backdrop-blur supports-[backdrop-filter]:bg-ink-950/80 border-b border-white/10">
+    <header class="sticky top-0 z-40 bg-gradient-to-r from-brand-950/95 via-brand-700 to-brand-950/95 backdrop-blur supports-[backdrop-filter]:bg-brand-950/80 border-b border-white/10">
         <nav class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="flex items-center justify-between h-16">
                 <a href="{% url 'pool:dashboard' %}" class="flex items-center gap-2.5 group">
                     <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-600 text-white shadow-lg shadow-brand-900/40 group-hover:scale-105 transition-transform text-xl leading-none">⚽</span>
-                    <span class="flex flex-col leading-none">
-                        <span class="font-heading font-extrabold text-white text-lg tracking-tight">La Porrita</span>
-                        <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-400">World Cup 2026</span>
-                    </span>
+                    <div class="flex flex-col leading-none">
+                        <div class="flex items-center gap-2 leading-none">
+                            <span class="font-heading font-extrabold text-white text-lg tracking-tight leading-none">La Porrita de</span>
+                            <img src="{% static 'neurored-logo.webp' %}" alt="Neurored" class="h-10 w-auto block opacity-70 hover:opacity-100 transition-opacity -translate-y-[8px]">
+                        </div>
+                    </div>
                 </a>
 
                 <button id="menuBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink-100 hover:bg-white/10" aria-label="Menu" aria-expanded="false">
